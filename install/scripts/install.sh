@@ -23,7 +23,6 @@ yum install -y oracle-database-preinstall-18c rlwrap
 
 DISTR=$DISTRS_DIR/oracle-database-xe-18c-1.0-1.x86_64.rpm
 yum localinstall -y $DISTR
-rm $DISTR
 rm -rf $ORACLE_BASE/{admin,audit,cfgtoollogs,checkpoints,diag,fast_recovery_area,oradata,oraInventory/logs}
 #rm -rf $ORACLE_HOME/{admin,cfgtoollogs,dbs,log,network/admin,network/log,network/trace,rdbms/audit,rdbms/log}
 rm -rf $ORACLE_HOME/{admin,cfgtoollogs,dbs,log,network/admin,network/log,network/trace,rdbms/audit}
@@ -49,8 +48,7 @@ alias rllsnr='rlwrap lsnrctl'
 alias rlrman='rlwrap rman'
 EOF
 
-mv $OTHERS_DIR/oracle/XE_Database_mod.dbc $ORACLE_HOME/assistants/dbca/templates/
-rm -rf $OTHERS_DIR/oracle
+cp $OTHERS_DIR/oracle/XE_Database_mod.dbc $ORACLE_HOME/assistants/dbca/templates/
 chmod 640 $ORACLE_HOME/assistants/dbca/templates/*.dbc
 chown oracle:oinstall $ORACLE_HOME/assistants/dbca/templates/*.dbc
 
@@ -58,18 +56,15 @@ DISTR=$DISTRS_DIR/jdk-8u241-linux-x64.tar.gz
 rm -rf $ORACLE_HOME/jdk
 mkdir $ORACLE_HOME/jdk
 tar -xzf $DISTR -C $ORACLE_HOME/jdk --strip-components=1
-rm $DISTR
 chown -R oracle:oinstall $ORACLE_HOME/jdk
 
 DISTR=$DISTRS_DIR/apex_19.2.zip
 unzip -oqd $ORACLE_HOME $DISTR
-rm $DISTR
 chown -R oracle:oinstall $ORACLE_HOME/apex
 
 DISTR=$DISTRS_DIR/ords-19.4.0.352.1226.zip
 mkdir $ORACLE_BASE/ords
 unzip -oqd $ORACLE_BASE/ords $DISTR
-rm $DISTR
 rm -rf $ORACLE_BASE/ords/params
 chown -R oracle:oinstall $ORACLE_BASE/ords
 
@@ -80,12 +75,10 @@ chown -R oracle:oinstall $ORACLE_BASE/ords
 DISTR=$DISTRS_DIR/apache-tomcat-9.0.31.tar.gz
 mkdir $CATALINA_HOME
 tar -xzf $DISTR -C $CATALINA_HOME --strip-components=1
-rm $DISTR
 rm -rf $CATALINA_HOME/{logs,temp,work}
 cat $OTHERS_DIR/tomcat/managers_context.xml >$CATALINA_HOME/webapps/manager/META-INF/context.xml
 cat $OTHERS_DIR/tomcat/managers_context.xml >$CATALINA_HOME/webapps/host-manager/META-INF/context.xml
-mv -f $OTHERS_DIR/tomcat/conf/* $CATALINA_HOME/conf/
-rm -rf $OTHERS_DIR/tomcat
+cp -f $OTHERS_DIR/tomcat/conf/* $CATALINA_HOME/conf/
 chmod 600 $CATALINA_HOME/conf/*
 
 
@@ -97,11 +90,11 @@ ssh-keygen -A
 # for use as volume
 mkdir /u02
 
-mv $SCRIPTS_DIR/setup_oracle.sh /home/oracle/
+cp $SCRIPTS_DIR/setup_oracle.sh /home/oracle/
+chmod u+x /home/oracle/setup_oracle.sh
 chown oracle:oinstall /home/oracle/setup_oracle.sh
-mv $SCRIPTS_DIR/entrypoint.sh /root/
+cp $SCRIPTS_DIR/entrypoint.sh /root/
+chmod u+x /root/entrypoint.sh
 chown root:root /root/entrypoint.sh
-
-rm -rf /tmp/install
 
 rm -rf /var/cache/yum

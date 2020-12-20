@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:experimental
+#
 # REQUIRED FILES TO BUILD THIS IMAGE
 # ----------------------------------
 #   - oracle-database-xe-18c-1.0-1.x86_64.rpm
@@ -30,11 +32,7 @@ ENV ORACLE_BASE=/opt/oracle \
 ENV JAVA_HOME=$ORACLE_HOME/jdk \
     PATH=$ORACLE_HOME/jdk/bin:$ORACLE_HOME/bin:$PATH
 
-# Copy install files
-COPY install/ /tmp/install/
-
-RUN chmod u+x /tmp/install/scripts/*.sh && \
-    /tmp/install/scripts/install.sh
+RUN --mount=type=bind,source=./install,target=/tmp/install bash /tmp/install/scripts/install.sh
 
 EXPOSE 22 1521 8009 8080
 

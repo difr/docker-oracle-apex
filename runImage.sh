@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-IMAGE_NAME="difr/oracle-apex:1.0"
+IMAGE_NAME="difr/oracle-apex:1.1"
 CONTAINER_NAME="oracle-apex"
 DATA_DIR="/root/oracle-apex-data"
 
@@ -15,7 +15,8 @@ docker run -it \
   -p 48080:8080 \
   --shm-size=1g \
   --ulimit memlock=-1:-1 \
-  --restart=always \
+  --restart=unless-stopped \
+  --stop-timeout=120 \
   --name $CONTAINER_NAME \
   $IMAGE_NAME
 #
@@ -41,5 +42,5 @@ docker logs --tail 50 --follow --timestamps oracle-apex
 docker container exec -it oracle-apex /bin/bash
 
 docker update --restart=no oracle-apex
-docker stop -t 120 oracle-apex
+docker stop oracle-apex
 docker start -ai oracle-apex
