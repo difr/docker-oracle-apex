@@ -14,9 +14,10 @@ trap exit SIGINT SIGKILL SIGTERM
 if [ ! -d /u02/oracle ]; then
   mkdir -p /u02/oracle
   chown -R oracle:oinstall /u02/oracle
-  su - oracle -c /home/oracle/setup_oracle.sh
+  su - oracle -c "/home/oracle/setup_oracle.sh"
   cp -af /etc/oratab /u02/oracle/oratab
 else
+  su - oracle -c "/home/oracle/setup_oracle.sh lonly"
   cp -af /u02/oracle/oratab /etc/oratab
 fi
 if [ ! -d /u02/tomcat ]; then

@@ -1,9 +1,15 @@
 #!/bin/bash -xe
 
+A=$1
+#links only?
 mldir () {
-  mkdir -p $1
-  rm -rf $2
-  ln -sT $1 $2
+  if [ $A != "lonly" ]; then
+    mkdir -p $1
+    rm -rf $2
+    ln -sT $1 $2
+  elif [ ! -L $2 ]; then
+    ln -sT $1 $2
+  fi
 }
 mldir /u02/oracle/admin $ORACLE_BASE/admin
 mldir /u02/oracle/audit $ORACLE_BASE/audit
@@ -12,7 +18,6 @@ mldir /u02/oracle/checkpoints $ORACLE_BASE/checkpoints
 mldir /u02/oracle/diag $ORACLE_BASE/diag
 mldir /u02/oracle/oradata $ORACLE_BASE/oradata
 mldir /u02/oracle/oraInventory/logs $ORACLE_BASE/oraInventory/logs
-chmod g+w /u02/oracle/oraInventory/logs
 mldir /u02/oracle/home/admin $ORACLE_HOME/admin
 mldir /u02/oracle/home/cfgtoollogs $ORACLE_HOME/cfgtoollogs
 mldir /u02/oracle/home/dbs $ORACLE_HOME/dbs
@@ -37,11 +42,13 @@ mldir /u02/oracle/home/rdbms/audit $ORACLE_HOME/rdbms/audit
 #ORA-06512: at "SYS.DBMS_QOPATCH", line 1622
 #ORA-06512: at "SYS.DBMS_QOPATCH", line 1523
 #ORA-06512: at line 1
-mkdir /u02/oracle/home/rdbms/log
-mkdir /u02/oracle/home/apex
 mldir /u02/oracle/ords/config $ORACLE_BASE/ords/config
 mldir /u02/oracle/ords/params $ORACLE_BASE/ords/params
 mldir /u02/oracle/ords/log $ORACLE_BASE/ords/log
+[ $A == "lonly" ] && exit 0
+chmod g+w /u02/oracle/oraInventory/logs
+mkdir /u02/oracle/home/rdbms/log
+mkdir /u02/oracle/home/apex
 
 if [ -f /u02/oracle/.pwds ]; then
   . /u02/oracle/.pwds
