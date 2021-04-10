@@ -3,7 +3,7 @@
 A=$1
 #links only?
 mldir () {
-  if [ $A != "lonly" ]; then
+  if [ "$A" != "lonly" ]; then
     mkdir -p $1
     rm -rf $2
     ln -sT $1 $2
@@ -45,7 +45,7 @@ mldir /u02/oracle/home/rdbms/audit $ORACLE_HOME/rdbms/audit
 mldir /u02/oracle/ords/config $ORACLE_BASE/ords/config
 mldir /u02/oracle/ords/params $ORACLE_BASE/ords/params
 mldir /u02/oracle/ords/log $ORACLE_BASE/ords/log
-[ $A == "lonly" ] && exit 0
+[ "$A" == "lonly" ] && exit 0
 chmod g+w /u02/oracle/oraInventory/logs
 mkdir /u02/oracle/home/rdbms/log
 mkdir /u02/oracle/home/apex
